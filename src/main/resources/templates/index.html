@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Accueil - Système de Réservation</title>
+    <meta charset="UTF-8">
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            padding: 40px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            text-align: center;
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: rgba(255,255,255,0.1); 
+            padding: 40px; 
+            border-radius: 15px; 
+            backdrop-filter: blur(10px);
+        }
+        h1 { 
+            font-size: 3em; 
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        .nav { 
+            display: flex; 
+            flex-direction: column;
+            gap: 15px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        .nav a { 
+            display: block;
+            padding: 15px 25px; 
+            background: #4CAF50; 
+            color: white; 
+            text-decoration: none;
+            border-radius: 8px; 
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+        .nav a:hover { 
+            background: #45a049; 
+            transform: translateY(-2px);
+        }
+        .api-links {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.3);
+        }
+        .api-links a {
+            color: #ffeb3b;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✈️ Système de Réservation</h1>
+        <div class="subtitle">Gestion complète des vols et réservations</div>
+        
+        <div class="nav">
+            <a href="vols.html">📋 Gestion des Vols</a>
+            <a href="reservations.html">🎫 Gestion des Réservations</a>
+        </div>
+
+        <div class="api-links">
+            <h3>Outils de développement</h3>
+            <a href="/swagger-ui.html" target="_blank">📚 API Documentation</a>
+            <a href="/h2-console" target="_blank">🗄️ Base de données H2</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Réservations - Système Vols</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 30px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 300;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid #e9ecef;
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #495057;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-control {
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 15px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-refresh {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .btn-refresh:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .vol-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            th, td {
+                padding: 10px 8px;
+                font-size: 14px;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .empty-state i {
+            font-size: 3em;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎫 Gestion des Réservations</h1>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="window.location.href='/'">
+                    🏠 Accueil
+                </button>
+                <button class="btn btn-secondary" onclick="window.location.href='/vols'">
+                    ✈️ Gestion des Vols
+                </button>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Message d'état -->
+            <div id="message" class="message"></div>
+
+            <!-- Section Nouvelle Réservation -->
+            <div class="section">
+                <h2>➕ Nouvelle Réservation</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>👤 Nom du client</label>
+                        <input type="text" id="nomClient" class="form-control" placeholder="Ex: Jean Dupont">
+                    </div>
+                    <div class="form-group">
+                        <label>💺 Nombre de places</label>
+                        <input type="number" id="nombrePlaces" class="form-control" placeholder="Ex: 2" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>✈️ Vol</label>
+                        <select id="volSelect" class="form-control">
+                            <option value="">Choisir un vol...</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn-success" onclick="ajouterReservation()">
+                    ✅ Créer la Réservation
+                </button>
+            </div>
+
+            <!-- Section Liste des Réservations -->
+            <div class="section">
+                <h2>📋 Liste des Réservations</h2>
+                <button class="btn-refresh" onclick="chargerReservations()">
+                    🔄 Actualiser la Liste
+                </button>
+                
+                <div class="table-container">
+                    <table id="reservationsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Client</th>
+                                <th>Places</th>
+                                <th>Vol</th>
+                                <th>Itinéraire</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reservationsBody">
+                            <tr>
+                                <td colspan="6" class="loading">
+                                    Chargement des réservations...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let tousLesVols = [];
+
+        // Afficher un message
+        function showMessage(message, isError = false) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.className = isError ? 'message error' : 'message success';
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Charger au démarrage
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Page réservations chargée');
+            chargerVols();
+            chargerReservations();
+        });
+
+        // Charger la liste des vols pour le select
+        async function chargerVols() {
+            try {
+                const response = await fetch('/api/vols');
+                if (!response.ok) throw new Error('Erreur de chargement des vols');
+                
+                tousLesVols = await response.json();
+                
+                const select = document.getElementById('volSelect');
+                select.innerHTML = '<option value="">Choisir un vol...</option>';
+                
+                tousLesVols.forEach(vol => {
+                    const option = document.createElement('option');
+                    option.value = vol.id;
+                    option.textContent = `${vol.depart} → ${vol.destination} (${vol.placesDisponibles} places disponibles)`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Erreur:', error);
+                showMessage('❌ Erreur lors du chargement des vols', true);
+            }
+        }
+
+        // Charger toutes les réservations
+        async function chargerReservations() {
+            try {
+                const tbody = document.getElementById('reservationsBody');
+                tbody.innerHTML = '<tr><td colspan="6" class="loading">Chargement en cours...</td></tr>';
+                
+                const response = await fetch('/api/reservations');
+                if (!response.ok) throw new Error('Erreur de chargement des réservations');
+                
+                const reservations = await response.json();
+                
+                tbody.innerHTML = '';
+                
+                if (reservations.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                <div>📭</div>
+                                <h3>Aucune réservation trouvée</h3>
+                                <p>Créez votre première réservation ci-dessus</p>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                reservations.forEach(reservation => {
+                    const vol = reservation.vol;
+                    const volInfo = vol ? 
+                        `<div class="vol-info">
+                            <span>🛫 ${vol.depart} → 🛬 ${vol.destination}</span>
+                        </div>` : 
+                        'N/A';
+                    
+                    const row = `
+                        <tr>
+                            <td><strong>#${reservation.id}</strong></td>
+                            <td>👤 ${reservation.nomClient}</td>
+                            <td>
+                                <span class="status-badge status-active">
+                                    💺 ${reservation.nombrePlaces} place${reservation.nombrePlaces > 1 ? 's' : ''}
+                                </span>
+                            </td>
+                            <td>${vol ? `Vol #${vol.id}` : 'N/A'}</td>
+                            <td>${volInfo}</td>
+                            <td>
+                                <button class="btn-danger" onclick="supprimerReservation(${reservation.id})">
+                                    🗑️ Annuler
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            } catch (error) {
+                console.error('Erreur:', error);
+                document.getElementById('reservationsBody').innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: #dc3545; padding: 40px;">
+                            ❌ Erreur de chargement: ${error.message}
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Ajouter une nouvelle réservation
+        async function ajouterReservation() {
+            const volId = document.getElementById('volSelect').value;
+            const nomClient = document.getElementById('nomClient').value.trim();
+            const nombrePlaces = parseInt(document.getElementById('nombrePlaces').value);
+
+            // Validation
+            if (!volId || !nomClient || !nombrePlaces) {
+                showMessage('❌ Veuillez remplir tous les champs', true);
+                return;
+            }
+
+            if (nombrePlaces <= 0) {
+                showMessage('❌ Le nombre de places doit être supérieur à 0', true);
+                return;
+            }
+
+            const reservation = {
+                nomClient: nomClient,
+                nombrePlaces: nombrePlaces,
+                vol: { id: parseInt(volId) }
+            };
+
+            try {
+                const response = await fetch('/api/reservations', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(reservation)
+                });
+
+                if (response.ok) {
+                    showMessage('✅ Réservation créée avec succès !');
+                    
+                    // Réinitialiser le formulaire
+                    document.getElementById('nomClient').value = '';
+                    document.getElementById('nombrePlaces').value = '';
+                    document.getElementById('volSelect').value = '';
+                    
+                    // Recharger les données
+                    chargerReservations();
+                    chargerVols();
+                    
+                } else {
+                    const errorText = await response.text();
+                    showMessage('❌ Erreur: ' + errorText, true);
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                showMessage('❌ Erreur réseau lors de la création', true);
+            }
+        }
+
+        // Supprimer une réservation
+        async function supprimerReservation(id) {
+            if (!confirm('Êtes-vous sûr de vouloir annuler cette réservation ?\nCette action est irréversible.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/reservations/${id}`, { 
+                    method: 'DELETE' 
+                });
+                
+                if (response.ok) {
+                    showMessage('✅ Réservation annulée avec succès !');
+                    chargerReservations();
+                    chargerVols();
+                } else {
+                    showMessage('❌ Erreur lors de l\'annulation', true);
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                showMessage('❌ Erreur réseau lors de l\'annulation', true);
+            }
+        }
+
+        // Tester l'API au chargement
+        async function testerAPI() {
+            try {
+                const response = await fetch('/api/reservations/test');
+                if (response.ok) {
+                    console.log('✅ API réservations fonctionne');
+                }
+            } catch (error) {
+                console.warn('⚠️ API test endpoint non disponible');
+            }
+        }
+
+        testerAPI();
+    </script>
+</body>
+</html>
