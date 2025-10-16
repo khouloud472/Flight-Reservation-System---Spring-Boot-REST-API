@@ -20,10 +20,18 @@ pipeline {
         }
 
         stage('Build') {
-            steps {
+    steps {
+        script {
+            try {
                 sh 'mvn clean compile'
+            } catch (err) {
+                echo "❌ Erreur Maven : ${err}"
+                error("Build failed")
             }
         }
+    }
+}
+
 
         stage('Test') {
             steps {
