@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven'   // Nom configuré dans Jenkins (Global Tool Configuration)
-        jdk 'JDK17'     // Nom du JDK configuré dans Jenkins
-    }
-
     environment {
         APP_NAME = "Flight-Reservation-System"
         JAR_NAME = "reservationavion.jar"
