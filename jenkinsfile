@@ -1,0 +1,64 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven'   // Nom configuré dans Jenkins (Global Tool Configuration)
+        jdk 'JDK17'     // Nom du JDK configuré dans Jenkins
+    }
+
+    environment {
+        APP_NAME = "Flight-Reservation-System"
+        JAR_NAME = "reservationavion.jar"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo '📥 Clonage du projet...'
+                git branch: 'main', url: 'https://github.com/ton-user/Flight-Reservation-System---Spring-Boot-REST-API.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo '🏗️ Compilation du projet...'
+                sh 'mvn clean compile'
+            }
+        }
+
+        stage('Tests') {
+            steps {
+                echo '🧪 Exécution des tests unitaires...'
+                sh 'mvn test'
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage('Package') {
+            steps {
+                echo '📦 Création du jar exécutable...'
+                sh 'mvn package -DskipTests'
+            }
+        }
+
+        stage('Deploy (Local)') {
+            steps {
+                echo '🚀 Lancement de l’application...'
+                sh 'nohup java -jar target/*.jar > app.log 2>&1 &'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Pipeline exécuté avec succès !'
+        }
+        failure {
+            echo '❌ Erreur dans le pipeline.'
+        }
+    }
+}
