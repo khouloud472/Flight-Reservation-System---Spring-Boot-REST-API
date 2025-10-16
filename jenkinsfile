@@ -9,7 +9,6 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo '📥 Clonage du projet...'
                 git branch: 'main', url: 'https://github.com/khouloud472/Flight-Reservation-System---Spring-Boot-REST-API.git'
             }
         }
