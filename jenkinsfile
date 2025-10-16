@@ -15,24 +15,22 @@ pipeline {
         }
 
         stage('Build') {
-    steps {
-        sh 'mvn clean compile'
-    }
-}
+            steps {
+                sh 'mvn clean compile'
+           }
+         }
 
-stage('Test') {
-    steps {
-        // Tu peux ignorer temporairement les tests
-        sh 'mvn test -Dmaven.test.failure.ignore=true'
-    }
-}
+        stage('Test') {
+            steps {
+               sh 'mvn test -Dmaven.test.failure.ignore=true'
+            }
+         }
 
-stage('Package') {
-    steps {
-        sh 'mvn package -DskipTests'
-    }
-}
-
+        stage('Package') {
+            steps {
+              sh 'mvn package -DskipTests'
+             }
+          }
 
         stage('Deploy (Local)') {
             steps {
