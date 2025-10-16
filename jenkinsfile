@@ -6,35 +6,51 @@ pipeline {
         JAR_NAME = "reservationavion.jar"
     }
 
+    tools {
+        maven 'Maven' // Nom exact dans Jenkins
+        jdk 'JDK11'    // Nom exact de Java configuré
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/khouloud472/Flight-Reservation-System---Spring-Boot-REST-API.git'
+                git branch: 'main', url: 'https://github.com/khouloud472/Flight-Reservation-System---Spring-Boot-REST-API.git',
+                    credentialsId: 'github-token' // Ton credential GitHub
             }
         }
 
         stage('Build') {
             steps {
                 sh 'mvn clean compile'
-           }
-         }
+            }
+        }
 
         stage('Test') {
             steps {
-               sh 'mvn test -Dmaven.test.failure.ignore=true'
+                sh 'mvn test'
             }
-         }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
+        }
 
         stage('Package') {
             steps {
-              sh 'mvn package -DskipTests'
-             }
-          }
+                sh 'mvn package -DskipTests'
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                }
+            }
+        }
 
         stage('Deploy (Local)') {
             steps {
                 echo '🚀 Lancement de l’application...'
-                sh 'nohup java -jar target/*.jar > app.log 2>&1 &'
+                sh "nohup java -jar target/${JAR_NAME} > app.log 2>&1 &"
             }
         }
     }
