@@ -56,14 +56,6 @@ pipeline {
                 sh "nohup java -jar target/${JAR_NAME} > app.log 2>&1 &"
             }
         }
-
-       stage('display message')
-{
-           steps {
-               echo 'Hello from github
-}
-
-}
     }
 
     post {
